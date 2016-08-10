@@ -27,11 +27,16 @@ class WpkgRebootHandler(object):
         self.reboot_policy = config.get("WpkgRebootPolicy")
         self.status = STATUS_OK
 
-    def reboot(self):
+    def reboot(self, rebootcancel=False):
         logger.info(R"Wpkg-GP requested a reboot")
         # Check if we are past maximum number of reboots
         self.increment_reboot_number()
         print self.reboot_number, self.maximum_number_of_reboots
+        if rebootcancel:
+            logger.info("Reboot was canceled. Reboot is pending")
+            self.status = STATUS_PENDING
+            self.reset_reboot_number()
+            return "104 " + _("Installation requires a reboot, reboot was canceled. Continuing.")
         if self.reboot_number >= self.maximum_number_of_reboots:
             self.status = STATUS_ERROR
             logger.info("Current number of reboots is %i, and maximum number of reboots is %i. Will not reboot" % (self.reboot_number, self.maximum_number_of_reboots))

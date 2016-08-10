@@ -12,11 +12,11 @@ class NullHandler(logging.Handler):
 class WpkgNetworkHandler(object):
     def __init__(self):
         self.config = WpkgConfig.WpkgConfig()
-        wpkg_command = self.config.get("WpkgCommand")
-        self.get_network_share(wpkg_command)
+        self.wpkg_command = self.config.get("WpkgCommand")
+        self.get_network_share(self.wpkg_command)
         self.update_credentials()
         self.connected = False
-        
+
     def update_credentials(self):
         self.network_username = self.config.get("WpkgNetworkUsername")
         self.network_password = self.config.get("WpkgNetworkPassword")
@@ -89,7 +89,7 @@ class WpkgNetworkHandler(object):
                 self.connected = False
                 if n == 1326: #Logon failure
                     if self.network_username != None:
-                        logger.info("Could not log on the network with the username: %s\n The error was: %s Continuing to try to log on to share as service user" % (network_username, e))
+                        logger.info("Could not log on the network with the username: %s\n The error was: %s Continuing to try to log on to share as service user" % (self.network_username, e))
                         self.network_username = None
                         self.network_password = None
                     else:

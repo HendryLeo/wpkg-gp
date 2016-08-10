@@ -78,7 +78,7 @@ class WpkgExecuter():
                 commandlist.append("/quiet")
         self.execute_command = " ".join(commandlist)
                 
-    def Execute(self, handle=None):
+    def Execute(self, handle=None, rebootcancel=False):
         self.writer = WpkgWriter.WpkgWriter(handle)
         lines = []
         if self.is_running:
@@ -94,7 +94,20 @@ class WpkgExecuter():
         
         #Open the network share as another user, if necessary
         if not self.network_handler.connect_to_network_share():
+            net_msg = _("Error: Connecting to network share failed.")
+            self.writer.Write("100 " + net_msg)
             logger.error("Connecting to network share failed. Exiting.")
+            if not rebootcancel:
+                time.sleep(2)
+            return
+
+        # Check if System is on Blacklist
+        if not self.allowed_to_execute():
+            net_msg = _("Error: Client was blocked from server to execute wpkg.")
+            self.writer.Write("100 " + net_msg)
+            logger.error("Client was blocked from server to execute wpkg.")
+            if not rebootcancel:
+                time.sleep(4)
             return
 
         # Add environment parameters
@@ -157,7 +170,7 @@ class WpkgExecuter():
         
         if exitcode == 770560: #WPKG returns this when it requests a reboot
             logger.info(R"WPKG requested a reboot")
-            status = "100 " + self.reboot_handler.reboot()
+            status = "100 " + self.reboot_handler.reboot(rebootcancel)
             self.writer.Write(status)
         else:
             self.reboot_handler.reset_reboot_number()
@@ -189,6 +202,28 @@ class WpkgExecuter():
             return "   ... "
         if mod == 4:
             return "    ..."
+
+    def allowed_to_execute(self):
+        allowed = True
+        commandstring = os.path.expandvars(self.wpkg_command)
+        wpkg_path = commandstring.split("wpkg.js", 1)[0]
+        blacklist_path = wpkg_path + 'blacklist.txt'
+        try:
+            with open(blacklist_path, "r") as blacklist_file:
+                data = blacklist_file.readlines()
+            blacklist = []
+            for entry in data:
+                entry = entry.replace('\n', '')
+                if not entry.startswith('#') and entry != '':
+                    blacklist.append(entry.lower())
+            hostname = os.getenv('computername').lower()
+            # If Hostname in Blacklist don't allow execution
+            if hostname in blacklist:
+                allowed = False
+        except IOError:
+            return allowed
+        return allowed
+
 
 if __name__=='__main__':
     import sys, gettext

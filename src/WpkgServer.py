@@ -32,6 +32,7 @@ def ApplyIgnoreError(fn, args):
     try:
         return fn(*args)
     except error: # Ignore win32api errors.
+    #except pywintypes.api_error:
         return None
         
 
@@ -166,6 +167,7 @@ class WPKGControlService(win32serviceutil.ServiceFramework):
     
     def DoProcessClient(self, pipeHandle, tid):
         self.logger.debug("DoProcessClient() start")
+        rebootcancel = False
         try:
             try:
                 # Create a loop, reading large data.  If we knew the data stream was
@@ -190,14 +192,16 @@ class WPKGControlService(win32serviceutil.ServiceFramework):
                     self.logger.info("Wpkg Executer is not ready. Returning '%s' to client." % msg)
                     WriteFile(pipeHandle, msg.encode('ascii'))
                 else:
-                    if d == b"Execute" or d == b"ExecuteFromGPE":
+                    if d == b"Execute" or d == b"ExecuteFromGPE" or d == b"ExecuteNoReboot":
+                        if d == b"ExecuteNoReboot":
+                            rebootcancel = True
                         if d == b"ExecuteFromGPE" and self.config.get("DisableAtBootUp") == 1:
                             self.logger.info("Excution at startup is disabled, will not run".encode('ascii'))
                             WriteFile(pipeHandle, "200 Excution at startup is disabled, will not run")
                         else:
                             self.logger.info("Received 'Execute', executing WPKG")
                             if self.CheckIfClientIsAllowedToExecute(pipeHandle):
-                                self.WpkgExecuter.Execute(pipeHandle)
+                                self.WpkgExecuter.Execute(handle=pipeHandle, rebootcancel=rebootcancel)
                             else:
                                 self.logger.info("The user trying to execute Wpkg-GP is not authorized to do so")
                                 WriteFile(pipeHandle, "200 You are not authorized to execute Wpkg-GP".encode('ascii'))
