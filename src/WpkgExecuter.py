@@ -103,10 +103,11 @@ class WpkgExecuter():
 
         # Check if System is on Blacklist
         if not self.allowed_to_execute():
-            net_msg = _("Error: Client was blocked from server to execute wpkg.")
+            net_msg = _("Info: Client was blocked from server to execute wpkg.")
             self.writer.Write("100 " + net_msg)
-            logger.error("Client was blocked from server to execute wpkg.")
+            logger.info("Client was blocked from server to execute wpkg.")
             if not rebootcancel:
+                # Enough time to see the message during bootup
                 time.sleep(4)
             return
 

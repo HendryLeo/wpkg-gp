@@ -204,14 +204,14 @@ class WPKGControlService(win32serviceutil.ServiceFramework):
                                 self.WpkgExecuter.Execute(handle=pipeHandle, rebootcancel=rebootcancel)
                             else:
                                 self.logger.info("The user trying to execute Wpkg-GP is not authorized to do so")
-                                WriteFile(pipeHandle, "200 You are not authorized to execute Wpkg-GP".encode('ascii'))
+                                WriteFile(pipeHandle, "200 Info: You are not authorized to execute Wpkg-GP".encode('ascii'))
                     elif d == b"Cancel":
                         self.logger.info("Received 'Cancel', cancelling WPKG")
                         if self.CheckIfClientIsAllowedToExecute(pipeHandle):
                             self.WpkgExecuter.Cancel(pipeHandle)
                         else:
                             self.logger.info("The user trying to execute Wpkg-GP is not authorized to do so")
-                            WriteFile(pipeHandle, "200 You are not authorized to execute Wpkg-GP".encode('ascii'))
+                            WriteFile(pipeHandle, "200 Info: You are not authorized to execute Wpkg-GP".encode('ascii'))
                     else:
                         msg = "203 Unknown command: %s" % d
                         self.logger.info("Sending '%s' to client" % msg)
