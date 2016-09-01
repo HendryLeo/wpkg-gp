@@ -87,7 +87,7 @@ class WpkgNetworkHandler(object):
                 self.connected = True
             except win32wnet.error, (n, f, e):
                 self.connected = False
-                if n == 1326: #Logon failure
+                if n in [1326, 1244]: #Logon failure
                     if self.network_username != None:
                         logger.info("Could not log on the network with the username: %s\n The error was: %s Continuing to try to log on to share as service user" % (self.network_username, e))
                         self.network_username = None
