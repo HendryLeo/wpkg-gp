@@ -142,6 +142,8 @@ class WpkgExecuter():
         # clean up output and remove leading unwanted lines
         [lines.pop(0) for n in [0, 1, 2, 3]]
         cleaned_lines = []
+
+        # filter output more for relevant information
         for line in lines:
             # Remove Leading Spaces
             line = line.lstrip()
@@ -150,19 +152,21 @@ class WpkgExecuter():
             if line != '':
                 # If line not empty add data to the cleaned_lines list
                 if line.startswith(excludes):
+                    # exclude data we dont want
                     continue
                 elif line.startswith('Revision:'):
                     value = line.replace('Revision:', '')
                 elif line.startswith('Revision (new):'):
                     value = line.replace('Revision (new):', '')
-                elif line.startswith('Act'):
+                elif line.startswith('Action:'):
                     value = line.replace('Action:', '')
                     value = value_dict[value]
                 else:
+                    # Package Name
                     value = line
                 cleaned_lines.append(value)
 
-        # convert list into list with sublist (every 3 entries become a sublist)
+        # convert list into list with sublists (every 3 entries become a sublist)
         composite_list = [cleaned_lines[x:x + 3] for x in range(0, len(cleaned_lines), 3)]
 
         #DEBUG: print repr(composite_list)
