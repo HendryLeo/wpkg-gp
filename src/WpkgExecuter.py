@@ -77,7 +77,100 @@ class WpkgExecuter():
                 logger.debug("WpkgCommand is a js but is missing /quiet, adding")
                 commandlist.append("/quiet")
         self.execute_command = " ".join(commandlist)
-                
+
+    def Query(self, handle=None):
+        self.writer = WpkgWriter.WpkgWriter(handle)
+
+        # Adding query parameter to execute command
+        self.execute_command = self.execute_command + ' /query:Iudr'
+        if self.is_running:
+            logger.info(R"Client requested WPKG to execute query, but WPKG is already running.")
+            msg = "201 " + _("WPKG is already running")
+            self.writer.Write(msg)
+            return
+
+        parsedline = _("Initializing Wpkg-GP software query")
+        self.writer.Write("100 " + parsedline)
+        logger.info(R"Executing WPKG with the command %s" % self.execute_command)
+
+        # Open the network share as another user, if necessary
+        if not self.network_handler.connect_to_network_share():
+            net_msg = _("Error: Connecting to network share failed.")
+            self.writer.Write("100 " + net_msg)
+            logger.error("Connecting to network share failed. Exiting.")
+            return
+
+        # Check if System is on Blacklist
+        if not self.allowed_to_execute():
+            net_msg = _("Info: Client was blocked from server to execute wpkg.")
+            self.writer.Write("100 " + net_msg)
+            logger.info("Client was blocked from server to execute wpkg.")
+            return
+
+        # Add environment parameters
+        env = os.environ.copy()
+        config_env = self.config.EnvironmentVariables.get()
+        if config_env != None:
+            env.update(config_env)
+        # logger.debug(R"Environment variables are: %s" % env)
+
+        # Run WPKG Query
+        self.proc = subprocess.Popen(self.execute_command, stdout=subprocess.PIPE, bufsize=1, universal_newlines=True,
+                                     env=env)
+        self.isrunning = True
+
+        output = self.proc.communicate()
+        lines = output[0].split('\n')
+        exitcode = self.proc.poll()
+        self.is_running = False
+
+        # Closing handle to share
+        self.network_handler.disconnect_from_network_share()
+        logger.info(R"Finished executing Wpkg.js")
+
+        if exitcode == 1:  # Cscript returned an error
+            logger.error(R"WPKG command returned an error: %s" % lines[-1:])
+            self.writer.Write("200 " + _("Wpkg returned an error: %s") % lines[-1][0:-1])
+            return
+
+        value_dict = {'Installation pending':'install',
+                      'Upgrade pending':'update',
+                      'Downgrade pending': 'downgrade',
+                      'Remove pending': 'remove'}
+        excludes = ('ID:', 'Reboot:', 'Execute:', 'Priority:', 'Status:', 'Revision (old):')
+
+        # clean up output and remove leading unwanted lines
+        [lines.pop(0) for n in [0, 1, 2, 3]]
+        cleaned_lines = []
+        for line in lines:
+            # Remove Leading Spaces
+            line = line.lstrip()
+            # Remove double spaces
+            line = re.sub('\s{2,}', '', line)
+            if line != '':
+                # If line not empty add data to the cleaned_lines list
+                if line.startswith(excludes):
+                    continue
+                elif line.startswith('Revision:'):
+                    value = line.replace('Revision:', '')
+                elif line.startswith('Revision (new):'):
+                    value = line.replace('Revision (new):', '')
+                elif line.startswith('Act'):
+                    value = line.replace('Action:', '')
+                    value = value_dict[value]
+                else:
+                    value = line
+                cleaned_lines.append(value)
+
+        # convert list into list with sublist (every 3 entries become a sublist)
+        composite_list = [cleaned_lines[x:x + 3] for x in range(0, len(cleaned_lines), 3)]
+
+        #DEBUG: print repr(composite_list)
+
+        for entry in composite_list:
+            # Write Info to pipe
+            self.writer.Write("101 QUERY: %s-|-%s-|-%s" % (entry[0], entry[1], entry[2]))
+
     def Execute(self, handle=None, rebootcancel=False):
         self.writer = WpkgWriter.WpkgWriter(handle)
         lines = []
@@ -87,7 +180,6 @@ class WpkgExecuter():
             self.writer.Write(msg)
             return
 
-        
         parsedline = _("Initializing Wpkg-GP software installation")
         self.writer.Write("100 " + parsedline)
         logger.info(R"Executing WPKG with the command %s" % self.execute_command)

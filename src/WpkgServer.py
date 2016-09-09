@@ -205,6 +205,13 @@ class WPKGControlService(win32serviceutil.ServiceFramework):
                             else:
                                 self.logger.info("The user trying to execute Wpkg-GP is not authorized to do so")
                                 WriteFile(pipeHandle, "200 Info: You are not authorized to execute Wpkg-GP".encode('ascii'))
+                    elif d == b"Query":
+                        self.logger.info("Received 'Query', querying WPKG for updates")
+                        if self.CheckIfClientIsAllowedToExecute(pipeHandle):
+                            self.WpkgExecuter.Query(handle=pipeHandle)
+                        else:
+                            self.logger.info("The user trying to execute Wpkg-GP is not authorized to do so")
+                            WriteFile(pipeHandle, "200 Info: You are not authorized to execute Wpkg-GP".encode('ascii'))
                     elif d == b"Cancel":
                         self.logger.info("Received 'Cancel', cancelling WPKG")
                         if self.CheckIfClientIsAllowedToExecute(pipeHandle):
