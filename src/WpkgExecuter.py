@@ -89,7 +89,7 @@ class WpkgExecuter():
         self.execute_command = self.execute_command + ' /query:Iudr'
         if self.is_running:
             logger.info(R"Client requested WPKG to execute query, but WPKG is already running.")
-            msg = "201 " + _("WPKG is already running")
+            msg = "201 " + _("Info: WPKG is already running a task.")
             self.writer.Write(msg)
             return
 
@@ -196,7 +196,7 @@ class WpkgExecuter():
         lines = []
         if self.is_running:
             logger.info(R"Client requested WPKG to execute, but WPKG is already running.")
-            msg = "201 " + _("WPKG is already running")
+            msg = "201 " + _("Info: WPKG is already running a task.")
             self.writer.Write(msg)
             return
 
