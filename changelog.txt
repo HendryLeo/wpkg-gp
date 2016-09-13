@@ -1,0 +1,10 @@
+0.17.12:
+ - implemented "Query" Function that will display pending tasks (updates, downgrades, new installs and removes)
+ - fixed Problem in Network Connection Handler that resulted in the service not being able to close the connection to the server:
+       wpkg-gp used the mapping drive function to connect to the server but didn't specify the drive letter
+       because of this the winapi for closing a connection failed all the time
+       the result was that for some reason the execute function didnt work if the query function was started before once
+       until the service was restarted.
+
+       I changed the code so that the wpkg-gp now maps the network share as drive "z:", this shouldnt be a problem as
+       the system user shouldn't have any other mapped network drives as far as i can imagine.
