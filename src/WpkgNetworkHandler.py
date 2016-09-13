@@ -58,6 +58,7 @@ class WpkgNetworkHandler(object):
         # connecting to network share is not necessary
         if self.connected == True:
             logger.debug("Is already connected to the network")
+            #print 'Allready connected!' #TODO REMOVE DEBUG
             return True
         if self.network_username == None:
             logger.info("No username provided, credentials used will be that of the Wpkg-GP service.")
@@ -82,13 +83,15 @@ class WpkgNetworkHandler(object):
             i = i+1
             try:
                 logger.debug("Trying to connect to share. %s of %s" % (i, tries))
-                win32wnet.WNetAddConnection2(win32netcon.RESOURCETYPE_DISK, None, self.network_share, None, self.network_username, self.network_password, 0)
+                #print 'Trying to connect to: ', self.network_share #TODO REMOVE DEBUG
+                win32wnet.WNetAddConnection2(win32netcon.RESOURCETYPE_DISK, 'Z:', self.network_share, None, self.network_username, self.network_password, 0)
                 logger.info("Successfully connected to %s as %s" % (self.network_share, self.network_username))
                 self.connected = True
             except win32wnet.error, (n, f, e):
                 self.connected = False
                 if n in [1326, 1244]: #Logon failure
                     if self.network_username != None:
+                        print 'Logon Failure'
                         logger.info("Could not log on the network with the username: %s\n The error was: %s Continuing to try to log on to share as service user" % (self.network_username, e))
                         self.network_username = None
                         self.network_password = None
@@ -96,6 +99,7 @@ class WpkgNetworkHandler(object):
                         logger.info("Could not log on to the network with Wpkg-GP service account")
                         break
                 elif n == winerror.ERROR_SESSION_CREDENTIAL_CONFLICT: # 1219: Multiple connections from same user
+                    print 'ERROR: Multiple Connections from same user'
                     logger.info("Tried to connect to share '%s', but a connection already exists. Will disconnect, and retry." % self.network_share)
                     self.connected = True
                     self.disconnect_from_network_share()
@@ -109,16 +113,21 @@ class WpkgNetworkHandler(object):
         return self.connected  # connection successful if connected at this point
 
     def disconnect_from_network_share(self):
+        #print '\nTrying to Disconnect connection to server:' #TODO REMOVE DEBUG
         if self.connected == False:
+            #print 'Not Connected to server!\n' #TODO REMOVE DEBUG
             return
         try:
             logger.info("Trying to disconnect from the network share %s" % self.network_share)
-            win32wnet.WNetCancelConnection2(self.network_share, 1, True)
+            #win32wnet.WNetCancelConnection2(self.network_share, 1, True)
+            win32wnet.WNetCancelConnection2('Z:', 1, True)
+            #print 'Successfully disconnected' #TODO REMOVE DEBUG
             logger.info("Successfully disconnected from the network")
             self.connected = False
         except win32wnet.error, (n, f, e):
             if n == winerror.ERROR_NOT_CONNECTED: #2250: This network connection does not exist
-                logger.info("Was already disconnected from network") 
+                logger.info("Was already disconnected from network")
+                #print 'Not Connected error', n, f, e #TODO DEBUG
             else:
                 raise
 
