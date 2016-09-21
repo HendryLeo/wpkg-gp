@@ -82,8 +82,9 @@ class WpkgExecuter():
     def Query(self, handle=None):
         self.writer = WpkgWriter.WpkgWriter(handle)
 
-        # Adding query parameter to execute command
-        self.query_command = self.execute_command + ' /query:Iudr'
+        # Adding query and dryrun parameter to execute command
+        # /dryrun is used to the file date of wpkg.xml is untouched
+        self.query_command = self.execute_command + ' /query:Iudr /dryrun'
         if self.is_running:
             logger.info(R"Client requested WPKG to execute query, but WPKG is already running.")
             msg = "201 " + _("Info: WPKG is already running a task.")
