@@ -50,6 +50,9 @@ class WPKGControlService(win32serviceutil.ServiceFramework):
 
         self.config = WpkgConfig.WpkgConfig()
 
+        #reset wpkg runningstate
+        self.config.set_wpkg_runningstate('false')
+
         verbosity = self.config.get("WpkgVerbosity")
         install_path = self.config.install_path
         
