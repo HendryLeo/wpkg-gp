@@ -116,6 +116,9 @@ class WpkgExecuter():
             env.update(config_env)
         # logger.debug(R"Environment variables are: %s" % env)
 
+        # Set wpkg runningstate true
+        self.config.set_wpkg_runningstate('true')
+
         # Run WPKG Query
         self.proc = subprocess.Popen(self.query_command, stdout=subprocess.PIPE, bufsize=1, universal_newlines=True,
                                      env=env)
@@ -218,7 +221,10 @@ class WpkgExecuter():
         if config_env != None:
             env.update(config_env)
         #logger.debug(R"Environment variables are: %s" % env)
-        
+
+        # Set wpkg runningstate true
+        self.config.set_wpkg_runningstate('true')
+
         # Run WPKG
         self.proc = subprocess.Popen(self.execute_command, stdout=subprocess.PIPE, bufsize=1, universal_newlines=True, env=env)
         self.isrunning = True

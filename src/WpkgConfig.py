@@ -61,6 +61,11 @@ class WpkgConfig(object):
             if i.name == name:
                 i.set(new_value)
 
+    def set_wpkg_runningstate(self, state):
+        with _winreg.CreateKeyEx(_winreg.HKEY_LOCAL_MACHINE, R"SOFTWARE\WPKG", 0,
+                                 _winreg.KEY_ALL_ACCESS | _winreg.KEY_WOW64_64KEY) as key:
+            _winreg.SetValueEx(key, "running", 0, _winreg.REG_SZ, state)
+
 class WpkgSetting(object):
     def __init__(self, caller, name, default_value = None, type = "string", required = False):
         self.caller = caller
@@ -68,7 +73,7 @@ class WpkgSetting(object):
         self.default_value = default_value
         self.type = type
         self.required = required
-        
+
     def get_from_ini(self, log=True):
         try:
             ini_config =  self.caller.WpkgConfig[self.name]
