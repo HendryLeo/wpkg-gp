@@ -1,10 +1,6 @@
-0.17.12:
- - implemented "Query" Function that will display pending tasks (updates, downgrades, new installs and removes)
- - fixed Problem in Network Connection Handler that resulted in the service not being able to close the connection to the server:
-       wpkg-gp used the mapping drive function to connect to the server but didn't specify the drive letter
-       because of this the winapi for closing a connection failed all the time
-       the result was that for some reason the execute function didnt work if the query function was started before once
-       until the service was restarted.
+0.17.13:
+ - now sets the wpkg running state to "true" in the registry (HLKM\SOFTWARE\WPKG\running) before wpkg is executed.
+   wpkg will by default turn this false after it is done (if you have not disabled this in in the wpkg configuration)
+   as failsafe wpkg-gp will set it to "false" when its service is started (reboot, manually restart of the service)
+ - added "/dryrun" parameter to the query command so the wpkg.xml file date won't be altered.
 
-       I changed the code so that the wpkg-gp now maps the network share as drive "z:", this shouldnt be a problem as
-       the system user shouldn't have any other mapped network drives as far as i can imagine.
