@@ -295,7 +295,8 @@ class WpkgExecuter():
             self.writer.Write(handle, msg)
         except TypeError: #Maybe pipe is closed now
             pass
-    
+        self.config.set_wpkg_runningstate('false')
+
     def GetActivityIndicator(self):
         # Show for every 10 iteration
         mod = self.activityvalue % 5
