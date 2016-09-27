@@ -36,7 +36,7 @@ class WpkgRebootHandler(object):
             logger.info("Reboot was canceled. Reboot is pending")
             self.status = STATUS_PENDING
             self.reset_reboot_number()
-            return "104 " + _("Installation requires a reboot, reboot was canceled. Continuing.")
+            return "301 " + _("Installation requires a reboot, reboot was canceled. Continuing.")
         if self.reboot_number >= self.maximum_number_of_reboots:
             self.status = STATUS_ERROR
             logger.info("Current number of reboots is %i, and maximum number of reboots is %i. Will not reboot" % (self.reboot_number, self.maximum_number_of_reboots))
@@ -48,11 +48,11 @@ class WpkgRebootHandler(object):
             # running the main() loop from the module, thus killing it.
             thread.start_new_thread(reboot.RebootServer, ("Wpkg-GP software installation requested a reboot.", 0, 1))
             self.status = STATUS_REBOOTING
-            return "102 " + _("Installation requested a reboot. Rebooting now.")
+            return "302 " + _("Installation requested a reboot. Rebooting now.")
         elif self.reboot_policy == "ignore":
             logger.info("Reboot policy is set to 'ignore'. Reboot is pending")
             self.status = STATUS_PENDING
-            return "103 " + _("Installation requires a reboot, but policy set to ignore reboots. Continuing.")
+            return "303 " + _("Installation requires a reboot, but policy set to ignore reboots. Continuing.")
 
     def cancel(self):
         reboot.AbortReboot()

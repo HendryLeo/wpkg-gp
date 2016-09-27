@@ -98,14 +98,14 @@ class WpkgExecuter():
         # Open the network share as another user, if necessary
         if not self.network_handler.connect_to_network_share():
             net_msg = _("Error: Connecting to network share failed.")
-            self.writer.Write("100 " + net_msg)
+            self.writer.Write("203 " + net_msg)
             logger.error("Connecting to network share failed. Exiting.")
             return
 
         # Check if System is on Blacklist
         if not self.allowed_to_execute():
             net_msg = _("Info: Client was blocked from server to execute wpkg.")
-            self.writer.Write("100 " + net_msg)
+            self.writer.Write("204 " + net_msg)
             logger.info("Client was blocked from server to execute wpkg.")
             return
 
@@ -179,9 +179,9 @@ class WpkgExecuter():
         if composite_list:
             for name, version, task in composite_list:
                 # Write Info to pipe
-                self.writer.Write("101 TASK: %s\tNAME: %s\tREVISION: %s" % (task, name, version))
+                self.writer.Write("103 TASK: %s\tNAME: %s\tREVISION: %s" % (task, name, version))
         else:
-            self.writer.Write("101 No pending wpkg tasks")
+            self.writer.Write("104 No pending wpkg tasks")
 
     def Execute(self, handle=None, rebootcancel=False):
         self.writer = WpkgWriter.WpkgWriter(handle)
@@ -199,7 +199,7 @@ class WpkgExecuter():
         #Open the network share as another user, if necessary
         if not self.network_handler.connect_to_network_share():
             net_msg = _("Error: Connecting to network share failed.")
-            self.writer.Write("100 " + net_msg)
+            self.writer.Write("203 " + net_msg)
             logger.error("Connecting to network share failed. Exiting.")
             if not rebootcancel:
                 time.sleep(2)
@@ -208,7 +208,7 @@ class WpkgExecuter():
         # Check if System is on Blacklist
         if not self.allowed_to_execute():
             net_msg = _("Info: Client was blocked from server to execute wpkg.")
-            self.writer.Write("100 " + net_msg)
+            self.writer.Write("204 " + net_msg)
             logger.info("Client was blocked from server to execute wpkg.")
             if not rebootcancel:
                 # Enough time to see the message during bootup
@@ -278,7 +278,7 @@ class WpkgExecuter():
         
         if exitcode == 770560: #WPKG returns this when it requests a reboot
             logger.info(R"WPKG requested a reboot")
-            status = "100 " + self.reboot_handler.reboot(rebootcancel)
+            status = self.reboot_handler.reboot(rebootcancel)
             self.writer.Write(status)
         else:
             self.reboot_handler.reset_reboot_number()
