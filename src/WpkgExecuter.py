@@ -98,14 +98,14 @@ class WpkgExecuter():
         # Open the network share as another user, if necessary
         if not self.network_handler.connect_to_network_share():
             net_msg = _("Error: Connecting to network share failed.")
-            self.writer.Write("203 " + net_msg)
+            self.writer.Write("204 " + net_msg)
             logger.error("Connecting to network share failed. Exiting.")
             return
 
         # Check if System is on Blacklist
         if not self.allowed_to_execute():
             net_msg = _("Info: Client was blocked from server to execute wpkg.")
-            self.writer.Write("204 " + net_msg)
+            self.writer.Write("205 " + net_msg)
             logger.info("Client was blocked from server to execute wpkg.")
             return
 
@@ -199,7 +199,7 @@ class WpkgExecuter():
         #Open the network share as another user, if necessary
         if not self.network_handler.connect_to_network_share():
             net_msg = _("Error: Connecting to network share failed.")
-            self.writer.Write("203 " + net_msg)
+            self.writer.Write("204 " + net_msg)
             logger.error("Connecting to network share failed. Exiting.")
             if not rebootcancel:
                 time.sleep(2)
@@ -208,7 +208,7 @@ class WpkgExecuter():
         # Check if System is on Blacklist
         if not self.allowed_to_execute():
             net_msg = _("Info: Client was blocked from server to execute wpkg.")
-            self.writer.Write("204 " + net_msg)
+            self.writer.Write("205 " + net_msg)
             logger.info("Client was blocked from server to execute wpkg.")
             if not rebootcancel:
                 # Enough time to see the message during bootup
@@ -287,7 +287,7 @@ class WpkgExecuter():
         if self.isrunning:
             self.proc.kill()
             logger.info("Cancel called, WPKG process was killed.")
-            msg = "101 " + _("Cancel called, WPKG process was killed")
+            msg = "105 " + _("Cancel called, WPKG process was killed")
         else:
             logger.info("Cancel called, but WPKG process was not running")
             msg = "202 " + _("Cancel called, WPKG process was not running")
