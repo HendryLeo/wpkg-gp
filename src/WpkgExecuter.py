@@ -314,6 +314,7 @@ class WpkgExecuter():
 
     def allowed_to_execute(self):
         allowed = True
+        block_all = False
         commandstring = os.path.expandvars(self.wpkg_command)
         wpkg_path = commandstring.split("wpkg.js", 1)[0]
         blacklist_path = wpkg_path + 'blacklist.txt'
@@ -324,15 +325,21 @@ class WpkgExecuter():
             for entry in data:
                 entry = entry.replace('\n', '')
                 if not entry.startswith('#') and entry != '':
-                    blacklist.append(entry.lower())
+                    blacklist.append(entry.lower().strip())
+                if entry.strip().lower() == '!all!':
+                    # Block all systems from executing
+                    block_all = True
+                    break
             hostname = os.getenv('computername').lower()
             # If Hostname in Blacklist don't allow execution
             if hostname in blacklist:
                 allowed = False
         except IOError:
             return allowed
-        return allowed
-
+        if block_all:
+            return False
+        else:
+            return allowed
 
 if __name__=='__main__':
     import sys, gettext
