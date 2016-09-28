@@ -1,6 +1,5 @@
-0.17.13:
- - now sets the wpkg running state to "true" in the registry (HLKM\SOFTWARE\WPKG\running) before wpkg is executed.
-   wpkg will by default turn this false after it is done (if you have not disabled this in in the wpkg configuration)
-   as failsafe wpkg-gp will set it to "false" when its service is started (reboot, manually restart of the service)
- - added "/dryrun" parameter to the query command so the wpkg.xml file date won't be altered.
+0.17.14:
+ - set unique status codes for different types of message
+ - added option to block all systems through the blacklist feature
+  - Adding a line with !all! to the blacklist.txt wil block every connecting system
 
