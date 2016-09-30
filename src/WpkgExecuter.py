@@ -238,6 +238,8 @@ class WpkgExecuter():
 
         if self.config.get("WpkgActivityIndicator") == 1:
             show_activity = True
+        else:
+            show_activity = False
 
         #Reading lines
         quit = False
