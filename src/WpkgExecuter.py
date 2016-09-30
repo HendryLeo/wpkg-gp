@@ -179,9 +179,11 @@ class WpkgExecuter():
         if composite_list:
             for name, version, task in composite_list:
                 # Write Info to pipe
-                self.writer.Write("103 TASK: %s\tNAME: %s\tREVISION: %s" % (task, name, version))
+                query_msg = "103 TASK: %s\tNAME: %s\tREVISION: %s" % (task, name, version)
+                self.writer.Write(query_msg)
         else:
-            self.writer.Write("104 No pending wpkg tasks")
+            query_msg = "104 " + _("No pending wpkg tasks")
+            self.writer.Write(query_msg)
 
     def Execute(self, handle=None, rebootcancel=False):
         self.writer = WpkgWriter.WpkgWriter(handle)
