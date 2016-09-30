@@ -1,69 +1,96 @@
 # SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR ORGANIZATION
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
-"POT-Creation-Date: 2014-10-01 15:30+E. Africa Standard Time\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: BUG-EMAIL-ADDR <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: yyyy-mm-dd hh:mm+0000\n"
+"PO-Revision-Date: 2016-09-30 11:08+0100\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=CHARSET\n"
-"Content-Transfer-Encoding: ENCODING\n"
-"Generated-By: pygettext.py 1.5\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: plurals=2; plural=(n > 1)\n"
+"X-Generator: Eazy Po 0.9.5.3\n"
 
-
-#: src\WpkgExecuter.py:86
-msgid "WPKG is already running"
+#: WpkgExecuter.py:90 WpkgExecuter.py:193
+msgid "Info: WPKG is already running a task."
 msgstr ""
 
-#: src\WpkgExecuter.py:91
-msgid "Initializing Wpkg-GP software installation"
+#: WpkgExecuter.py:94
+msgid "Initializing Wpkg-GP software query"
 msgstr ""
 
-#: src\WpkgExecuter.py:155
+#: WpkgExecuter.py:100 WpkgExecuter.py:203
+msgid "Error: Connecting to network share failed."
+msgstr ""
+
+#: WpkgExecuter.py:107 WpkgExecuter.py:212
+msgid "Info: Client was blocked from server to execute wpkg."
+msgstr ""
+
+#: WpkgExecuter.py:136 WpkgExecuter.py:278
+#, python-format
 msgid "Wpkg returned an error: %s"
 msgstr ""
 
-#: src\WpkgExecuter.py:169
+#: WpkgExecuter.py:185
+msgid "No pending wpkg tasks"
+msgstr ""
+
+#: WpkgExecuter.py:197 WpkgTranslator.py:47
+msgid "Initializing Wpkg-GP software installation"
+msgstr ""
+
+#: WpkgExecuter.py:292
 msgid "Cancel called, WPKG process was killed"
 msgstr ""
 
-#: src\WpkgExecuter.py:172
+#: WpkgExecuter.py:295
 msgid "Cancel called, WPKG process was not running"
 msgstr ""
 
-#: src\WpkgOutputParser.py:31 src\WpkgOutputParser.py:34
+#: WpkgOutputParser.py:31 WpkgOutputParser.py:34
 msgid "removing"
 msgstr ""
 
-#: src\WpkgOutputParser.py:38
+#: WpkgOutputParser.py:38
 msgid "verifying"
 msgstr ""
 
-#: src\WpkgOutputParser.py:46
+#: WpkgOutputParser.py:46
 msgid "upgrading"
 msgstr ""
 
-#: src\WpkgOutputParser.py:48
+#: WpkgOutputParser.py:48
 msgid "installing"
 msgstr ""
 
-#: src\WpkgOutputParser.py:57
+#: WpkgOutputParser.py:57
+#, python-format
 msgid "Wpkg-GP is %s %s (%s/%s)"
 msgstr ""
 
-#: src\WpkgRebootHandler.py:39
-msgid "Wpkg-GP requested a reboot, but we have rebooted too many times in a row. Continuing."
+#: WpkgRebootHandler.py:39
+msgid "Installation requires a reboot, reboot was canceled. Continuing."
 msgstr ""
 
-#: src\WpkgRebootHandler.py:46
+#: WpkgRebootHandler.py:44
+msgid ""
+"Wpkg-GP requested a reboot, but we have rebooted too many times in a row. "
+"Continuing."
+msgstr ""
+
+#: WpkgRebootHandler.py:51
 msgid "Installation requested a reboot. Rebooting now."
 msgstr ""
 
-#: src\WpkgRebootHandler.py:50
-msgid "Installation requires a reboot, but policy set to ignore reboots. Continuing."
+#: WpkgRebootHandler.py:55
+msgid ""
+"Installation requires a reboot, but policy set to ignore reboots. Continuing."
 msgstr ""
-
