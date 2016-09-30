@@ -108,6 +108,11 @@ class WpkgNetworkHandler(object):
                     # This can indicate that the network path was wrong, or that the network is not available yet
                     logger.info("An issue occured when connecting to '%s', the error code is %i and the error string is '%s'" % (self.network_share, n, e))
                     time.sleep(sleep)
+                elif n == 85:
+                    # network path is already mapped to the drive letter z, most likely WpkgServer crashed during an execution
+                    logger.info("Tried to connect share '%s' to drive letter z:, but drive is already mapped. Will diconnect and retry." % self.network_share)
+                    self.connected = True
+                    self.disconnect_from_network_share()
                 else:
                     raise
         return self.connected  # connection successful if connected at this point
