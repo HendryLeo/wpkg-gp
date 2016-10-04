@@ -1,4 +1,4 @@
-0.17.14:
+0.17.15:
  - set unique status codes for different types of message
   - translating wpkg-gp is now supported but i would advise to use ASCII characters only at the moment or you may run
     into string decoding problems with wpkg-gp client and the bootup execution display
@@ -7,5 +7,7 @@
  - fixed network share connection problem if for some reason the share is allready connected to drive z
     - if the drive letter z create problem in some environments please let me know and i will make this configureable
       through the wpkg-gp config file.
+ - fixed internal message decoding and encoding, strings including non ASCII characters should now display fine at bootup,
+   in shell (wpkgpipeclient) and in gui (wpkg-gp client)
 
 
