@@ -66,6 +66,17 @@ class WpkgConfig(object):
                                  _winreg.KEY_ALL_ACCESS | _winreg.KEY_WOW64_64KEY) as key:
             _winreg.SetValueEx(key, "running", 0, _winreg.REG_SZ, state)
 
+    def get_codepage(self):
+        try:
+            key = _winreg.OpenKey(_winreg.HKEY_LOCAL_MACHINE, R"SYSTEM\CurrentControlSet\Control\Nls\CodePage", 0,
+                                  _winreg.KEY_READ | _winreg.KEY_WOW64_64KEY)
+            codepage = _winreg.QueryValueEx(key, "OEMCP")[0]
+            _winreg.CloseKey(key)
+        except WindowsError:
+            print 'Registy Error: Can\'t read codepage'
+            codepage = '1252'
+        return 'cp' + codepage
+
 class WpkgSetting(object):
     def __init__(self, caller, name, default_value = None, type = "string", required = False):
         self.caller = caller
