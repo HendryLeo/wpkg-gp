@@ -1,8 +1,10 @@
+# -*- encoding: utf-8 -*-
 import re
 
 class WpkgOutputParser(object):
-    def __init__(self):
+    def __init__(self, codepage):
         self.reset()
+        self.codepage = codepage
         
     def reset(self):
         self.operation = "Initializing Wpkg-GP"
@@ -54,7 +56,7 @@ class WpkgOutputParser(object):
     def get_formatted_line(self):
         if self.updated == True:
             # Example: Wpkg-GP is installing Skype (1/25)
-            return _("Wpkg-GP is %s %s (%s/%s)") % (self.operation, self.package_name, self.pkgnum, self.pkgtot)
+            return _("Wpkg-GP is %s %s (%s/%s)") % (self.operation, self.package_name.decode(self.codepage).encode('utf-8'), self.pkgnum, self.pkgtot)
         else:
             return False
 
@@ -70,7 +72,7 @@ def main():
 2011-05-07 10:41:30, STATUS  : Install: Verifying package 'donothing' (2/2)
 2011-05-07 10:41:30, STATUS  : Performing operation (upgrade) on 'donothing' (donothing)
 2011-05-07 10:41:30, STATUS  : Finished software synchronization"""
-    parser = WpkgOutputParser()
+    parser = WpkgOutputParser('cp850') # TEST
     for line in example.split("\n"):
         parser.parse_line(line)
         if parser.updated == True:

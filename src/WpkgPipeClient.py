@@ -39,9 +39,9 @@ def runClient(server,msg,output=True,debug=False):
         try:
             (hr, readmsg) = ReadFile(pipeHandle, 512)
             if debug:
-                print (readmsg)
+                print (readmsg.decode('utf-8'))
             elif output: #Strip 3 digit status code
-                print (readmsg[4:])
+                print (readmsg[4:].decode('utf-8'))
             else:
                 lastcode = readmsg[0:3]
         except win32api.error as exc:

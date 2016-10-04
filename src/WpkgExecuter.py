@@ -35,11 +35,13 @@ class WpkgExecuter():
     def __init__(self, handle=None):
         self.config = WpkgConfig.WpkgConfig()
         self.wpkg_command = self.config.get("WpkgCommand")
+        self.codepage = self.config.get_codepage()
         self.writer = WpkgWriter.WpkgWriter(handle)
         self.network_handler = WpkgNetworkHandler.WpkgNetworkHandler()
-        self.parser = WpkgOutputParser.WpkgOutputParser()
+        self.parser = WpkgOutputParser.WpkgOutputParser(self.codepage)
         self.reboot_handler = WpkgRebootHandler.WpkgRebootHandler()
         self.parse_wpkg_command()
+
         self.activityvalue = 0
     
     def parse_wpkg_command(self):
@@ -166,7 +168,7 @@ class WpkgExecuter():
                     value = value_dict[value]
                 else:
                     # Package Name
-                    value = line
+                    value = line.decode(self.codepage).encode('utf-8')
                 cleaned_lines.append(value)
 
         # Closing handle to share
