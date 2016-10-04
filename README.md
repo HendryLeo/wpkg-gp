@@ -7,6 +7,7 @@ Added features not available in the original:
 - blacklist systems from executing wpkg-gp:
   - add blacklist.txt to your wpkg root directory and add the name of the system (per line) that should be blocked.
   - lines starting with "#" will be ignored.
+  - ```!all!``` will block all systems.
 
 Running WPKG as a Group Policy Extension with a few modification to work with my other project (WPKG-GP Client) 
 
