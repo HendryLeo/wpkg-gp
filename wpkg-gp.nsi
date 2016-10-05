@@ -23,7 +23,7 @@
 !define PRODUCT_VERSION "${VERSION}"
 !define PRODUCT_PUBLISHER "The Wpkg-GP team"
 !define PRODUCT_WEB_SITE "http://wpkg-gp.googlecode.com"
-!define PRODUCT_COPYRIGHT "© The Wpkg-GP team"
+!define PRODUCT_COPYRIGHT "ï¿½ The Wpkg-GP team"
 !define PRODUCT_UNINST_KEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\${GUID}"
 !define PRODUCT_UNINST_ROOT_KEY "HKLM"
 
@@ -321,7 +321,7 @@ Section "Wpkg-GP Client" Client
   # Install locale files
   CreateDirectory $INSTDIR\locale
   SetOutPath $INSTDIR\locale
-  File locale\wpkg-gp.pot
+  File /r locale\*
 
   CreateDirectory $INSTDIR\Microsoft.VC90.CRT
   SetOutPath $INSTDIR\Microsoft.VC90.CRT
