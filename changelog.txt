@@ -3,11 +3,11 @@
   - translating wpkg-gp is now supported but i would advise to use ASCII characters only at the moment or you may run
     into string decoding problems with wpkg-gp client and the bootup execution display
  - added option to block all systems through the blacklist feature
-  - Adding a line with !all! to the blacklist.txt wil block every connecting system
+  - Adding a line with ```!all!``` to the blacklist.txt wil block every connecting system from executing
  - fixed network share connection problem if for some reason the share is allready connected to drive z
     - if the drive letter z create problem in some environments please let me know and i will make this configureable
       through the wpkg-gp config file.
  - fixed internal message decoding and encoding, strings including non ASCII characters should now display fine at bootup,
    in shell (wpkgpipeclient) and in gui (wpkg-gp client)
-
+ - added german and spanish translation (spanish by Jsantolin)
 
