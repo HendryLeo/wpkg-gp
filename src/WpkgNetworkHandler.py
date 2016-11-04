@@ -84,7 +84,9 @@ class WpkgNetworkHandler(object):
             try:
                 logger.debug("Trying to connect to share. %s of %s" % (i, tries))
                 #print 'Trying to connect to: ', self.network_share #TODO REMOVE DEBUG
-                win32wnet.WNetAddConnection2(win32netcon.RESOURCETYPE_DISK, 'Z:', self.network_share, None, self.network_username, self.network_password, 0)
+                #win32wnet.WNetAddConnection2(win32netcon.RESOURCETYPE_DISK, 'Z:', self.network_share, None, self.network_username, self.network_password, 0)
+                win32wnet.WNetAddConnection2(win32netcon.RESOURCETYPE_DISK, None, self.network_share, None,  self.network_username, self.network_password, 0)
+
                 logger.info("Successfully connected to %s as %s" % (self.network_share, self.network_username))
                 self.connected = True
             except win32wnet.error, (n, f, e):
@@ -124,8 +126,8 @@ class WpkgNetworkHandler(object):
             return
         try:
             logger.info("Trying to disconnect from the network share %s" % self.network_share)
-            #win32wnet.WNetCancelConnection2(self.network_share, 1, True)
-            win32wnet.WNetCancelConnection2('Z:', 1, True)
+            win32wnet.WNetCancelConnection2(self.network_share, 1, True)
+            #win32wnet.WNetCancelConnection2('Z:', 1, True)
             #print 'Successfully disconnected' #TODO REMOVE DEBUG
             logger.info("Successfully disconnected from the network")
             self.connected = False
@@ -146,6 +148,7 @@ if __name__ == '__main__':
     print "Username.....: %s" % network_handler.network_username
     print "Password.....: %s" % network_handler.network_password
     network_handler.connect_to_network_share()
+    time.sleep(10)
     network_handler.disconnect_from_network_share()
     
 else:
