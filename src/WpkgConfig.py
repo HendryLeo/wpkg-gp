@@ -5,6 +5,7 @@ import base64
 import logging
 import win32crypt, pywintypes
 import re
+import datetime
 
 class NullHandler(logging.Handler):
     def emit(self, record):
@@ -65,6 +66,12 @@ class WpkgConfig(object):
         with _winreg.CreateKeyEx(_winreg.HKEY_LOCAL_MACHINE, R"SOFTWARE\WPKG", 0,
                                  _winreg.KEY_ALL_ACCESS | _winreg.KEY_WOW64_64KEY) as key:
             _winreg.SetValueEx(key, "running", 0, _winreg.REG_SZ, state)
+
+    def set_wpkg_synctime(self):
+        current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        with _winreg.CreateKeyEx(_winreg.HKEY_LOCAL_MACHINE, R"SOFTWARE\WPKG", 0,
+                                 _winreg.KEY_ALL_ACCESS | _winreg.KEY_WOW64_64KEY) as key:
+            _winreg.SetValueEx(key, "lastsync", 0, _winreg.REG_SZ, current_time)
 
     def get_codepage(self):
         try:
